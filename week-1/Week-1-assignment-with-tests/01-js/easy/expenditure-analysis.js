@@ -9,7 +9,13 @@
 */
 
 function calculateTotalSpentByCategory(transactions) {
-  return [];
+  const uniqueCategories = [...new Set(transactions.map((transaction) => transaction.category))];
+  return uniqueCategories.map((category) => {
+    const totalSpent = transactions
+      .filter((transaction) => transaction.category === category)
+      .reduce((result, transaction) => result + transaction.price, 0);
+    return { category, totalSpent };
+  })
 }
 
 module.exports = calculateTotalSpentByCategory;
