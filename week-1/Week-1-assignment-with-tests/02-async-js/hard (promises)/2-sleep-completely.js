@@ -4,5 +4,8 @@
  */
 
 function sleep (seconds) {
-
+    const start = Date.now();
+    while (Date.now() - start < seconds * 1000) {
+        // Keep the thread busy by doing nothing
+    }
 }
