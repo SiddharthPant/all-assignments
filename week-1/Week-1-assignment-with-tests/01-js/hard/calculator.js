@@ -62,17 +62,13 @@ class Calculator {
 
     try {
         this.result = Number(eval(expression));
+        if (!isFinite(this.result)) {
+          throw new Error("Cannot divide by zero");
+        }
     } catch (error) {
         throw new Error("Invalid expression!");
     }
 
-    if (isNaN(this.result)) {
-      throw new Error("Invalid expression!")
-    }
-
-    if (!isFinite(this.result)) {
-      throw new Error("Cannot divide by zero");
-    }
   }
 }
 
