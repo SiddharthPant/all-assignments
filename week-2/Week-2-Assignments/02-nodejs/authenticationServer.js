@@ -30,8 +30,52 @@
  */
 
 const express = require("express")
+const bodyParser = require("body-parser")
 const PORT = 3000;
 const app = express();
 // write your logic here, DONT WRITE app.listen(3000) when you're running tests, the tests will automatically start the server
 
 module.exports = app;
+app.use(bodyParser.json());
+
+const users = [];
+
+app.post('/signup', (req, res) => {
+  const { username, password, firstName, lastName, email } = req.body;
+  if (users.find(user => user.username === username)) {
+    res.status(400).send();
+  } else {
+    const user = {
+      username,
+      password,
+      firstName,
+      lastName,
+      email,
+      id: users.length + 1
+    };
+    users.push(user);
+    res.status(201).send('Signup successful');
+  }
+});
+
+app.post('/login', (req, res) => {
+  const { username, password } = req.body;
+  const user = users.find(user => user.username === username && user.password === password);
+  if (!user) {
+    res.status(401).send('Unauthorized');
+  } else {
+    res.status(200).json(user);
+  }
+});
+
+app.get('/data', (req, res) => {
+  const { username, password } = req.headers;
+  const user = users.find(user => user.username === username && user.password === password);
+  if (!user) {
+    res.status(401).send('Unauthorized');
+  } else {
+    res.status(200).json({users});
+  }
+});
+
+app.all("*", (req, res) => res.status(404).send("Route not found"));

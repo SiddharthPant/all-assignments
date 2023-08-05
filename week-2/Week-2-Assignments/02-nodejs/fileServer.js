@@ -23,3 +23,27 @@ const app = express();
 
 
 module.exports = app;
+
+app.get('/files', (req, res) => {
+    const files = fs.readdir('./files', (err, files) => {
+      if (err) {
+        return res.status(500).send('Error listing contents of directory');
+      }
+      return res.json(files)
+    });
+});
+
+app.get('/file/:filename', async (req, res) => {
+  const { filename } = req.params;
+  const filePath = path.join(__dirname, 'files', filename);
+  try {
+    fileContent = await fs.promises.readFile(filePath, 'utf-8');
+    res.send(fileContent);
+  } catch (err) {
+    res.status(404).send('File not found');
+  }
+});
+
+app.all("*", (req, res) => res.status(404).send("Route not found"));
+
+// app.listen(3000, () => console.log('Server listening on port 3000'));
